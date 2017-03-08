@@ -44,9 +44,73 @@
 				vm.newTask = '';
 			};
 
+			// 3 删除任务
+			// 3.1 根据当前项的id， 从列表中删除数据
+			vm.remove = function( id ) {
+				// console.log(id)
+				for(var i = 0; i < vm.taskList.length; i++) {
+					if(vm.taskList[i].id === id) {
+						// splice(i, 1) 就是从数组中删除一条数据, 然后改变的也是当前数组!!!
+						vm.taskList.splice(i, 1);
+					}
+				}
+			}
+
+			// 4 修改任务
+			// 4.1 给每一项绑定双击事件 ng-dblclick
+			// 4.2 双击后,会给当前元素添加一个: editing
+			// 4.3 展示出文本框以后, 要讲当前项的名称, 展示出来
+			vm.editId = 0;
+			vm.edit = function( id ) {
+				// 双击元素, 就让 editId 变为 当前 id
+				vm.editId = id;
+			};
+			// 敲回车保存内容
+			vm.update = function() {
+				vm.editId = 0;
+			};
+
+			// 5 切换任务选中状态
+			// 只要allChecked属性的值变化了，就修改任务列表中所有的数据
+			// 其他方式：监视allChecked的变化
+			vm.allChecked = false;
+			vm.checkAll = function() {
+				// 修改 taskList 中所有项的isCompleted属性的值
+				// 改为与allChecked的值相同！！！
+				vm.taskList.forEach(function(task) {
+					task.isCompleted = vm.allChecked;
+				});
+			};	
+
+			// 6 清除已完成的任务
+			// 6.1 clear Completed
+			// 按钮的展示和隐藏由：列表中是否具有已完成的任务来确定
+			// 6.2 点击 清除按钮
+			vm.clearAll = function() {
+				var temp = [];
+				for(var i = 0; i < vm.taskList.length; i++) {
+					if(!vm.taskList[i].isCompleted) {
+						temp.push(vm.taskList[i]);
+					}
+				}
+
+				vm.taskList = temp;
+			};
+
+			vm.isShow = false;
+			vm.$watch('taskList', function(newValue, oldValue) {
+				var temp = false;
+
+				for(var i = 0; i < vm.taskList.length; i++) {
+					if(vm.taskList[i].isCompleted) {
+						temp = true;
+						break;
+					}
+				}
+
+				vm.isShow = temp;
+			}, true);
 
 		}
-	
-
 })(window);
  

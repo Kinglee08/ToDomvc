@@ -26,9 +26,9 @@
       <ul class="todo-list">
         <!-- These are here just to show the structure of the list items -->
         <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-        <li ng-class="{completed: task.isCompleted, editing: task.id === editId}" ng-repeat="task in taskList track by $index">
+        <li ng-class="{completed: task.isCompleted, editing: task.id === editId}" ng-repeat="task in taskList | filter: selectedStatus track by $index">
           <div class="view">
-            <input class="toggle" type="checkbox" ng-model="task.isCompleted">
+            <input class="toggle" type="checkbox" ng-model="task.isCompleted" ng-change="toggleItem()">
             <label ng-bind="task.name" ng-dblclick="edit(task.id)"></label>
             <button class="destroy" ng-click="remove(task.id)"></button>
           </div>
@@ -41,21 +41,21 @@
     <!-- This footer should hidden by default and shown when there are todos -->
     <footer class="footer">
       <!-- This should be `0 items left` by default -->
-      <span class="todo-count"><strong>0</strong> item left</span>
+      <span class="todo-count"><strong ng-bind="getUnCompleted()"></strong> item left</span>
       <!-- Remove this if you don't implement routing -->
       <ul class="filters">
         <li>
-          <a class="selected" href="#/">All</a>
+          <a ng-class="{selected:selectedStatus.isCompleted === undefined}" href="#/" ng-click="selectAll()">All</a>
         </li>
         <li>
-          <a href="#/active">Active</a>
+          <a ng-class="{selected:selectedStatus.isCompleted === false}" href="#/active" ng-click="selectActive()">Active</a>
         </li>
         <li>
-          <a href="#/completed">Completed</a>
+          <a ng-class="{selected:selectedStatus.isComplected === true}" href="#/completed" ng-click="selectCompleted()">Completed</a>
         </li>
       </ul>
       <!-- Hidden if no completed items are left ↓ -->
-      <button class="clear-completed" ng-click="clearAll()" ng-show="isShow">Clear completed</button>
+      <button class="clear-completed" ng-click="clearAll()" ng-show="isShow()">Clear completed</button>
     </footer>
   </section>
   <footer class="info">
@@ -66,6 +66,8 @@
   <!-- 引入angular文件 -->
   <script src="node_modules/angular/angular.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/controller.js"></script>
+  <script src="js/dataService.js"></script>
 </body>
 
 </html>
